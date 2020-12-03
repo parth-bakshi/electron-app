@@ -86,6 +86,7 @@ export default function AddTodo({ open, onClose, addTask, categories }) {
       .then((res) => {
         if (res.status == 200) {
           addTask(res.data.data);
+          setTodoForm({...formData});
           enqueueSnackbar("Todo Added Successfully", { variant: "success" });
         }
         console.log(res);

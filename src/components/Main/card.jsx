@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -25,6 +25,7 @@ import {
   deepPurple,
   cyan,
 } from "@material-ui/core/colors";
+import { CircularProgress } from "@material-ui/core";
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
@@ -92,14 +93,17 @@ export default function SimpleCard(props) {
   const [completeStatus, changeCompleteStatus] = React.useState(
     props.completeStatus
   );
+  const [deleteLoader,setDeleteLoader] = useState(false);
+  const [completeLoader, setCompleteLoader] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
-  function toggleComplete() {
+  async function toggleComplete() {
+    setCompleteLoader(true);
     changeCompleteStatus(!completeStatus);
     const params = JSON.stringify({
       id: props.id,
     });
-    axios
+    await axios
       .post(apiURLs.toggleTask(), params, {
         headers: {
           Authorization: `Bearer ${Cookies.get("token")}`,
@@ -113,21 +117,24 @@ export default function SimpleCard(props) {
         } else {
           props.toggleTaskState(props.id);
           if (props.completeStatus)
-            enqueueSnackbar("Mark as a Incompleted", { variant: "error" });
+            enqueueSnackbar("Mark as Incompleted", { variant: "error" });
           if (!props.completeStatus)
-            enqueueSnackbar("Mark as a Completed", { variant: "success" });
+            enqueueSnackbar("Mark as Completed", { variant: "success" });
         }
         // console.log(res);
       });
 
     //api call for toggle status
+    setCompleteLoader(false);
   }
 
-  function deleteTask() {
+  async function deleteTask(e){
+    e.stopPropagation();
+    setDeleteLoader(true);
     const params = JSON.stringify({
       id: props.id,
     });
-    axios
+    await axios
       .post(apiURLs.deleteTask(), params, {
         headers: {
           Authorization: `Bearer ${Cookies.get("token")}`,
@@ -138,17 +145,19 @@ export default function SimpleCard(props) {
         if (res.status == 200) {
           props.deleteTask(props.id);
           enqueueSnackbar("Task Deleted Successfully", { variant: "success" });
+        }else{
+          enqueueSnackbar("Failed to Delete the Task", { variant: "error" });
         }
         // console.log(res);
       })
       .catch((e) => {
         enqueueSnackbar("Failed to Delete the Task", { variant: "error" });
       });
+    setDeleteLoader(false);
   }
   return (
     <Card
       className={`${classes.root} ${completeStatus ? "check" : null}`}
-      onClick={toggleComplete}
     >
       <CardContent className={classes.flexcol}>
         <div className={classes.content}>
@@ -162,22 +171,29 @@ export default function SimpleCard(props) {
           <div> {props.category} </div>
           <div> {moment(props.date).format("MM-DD-YYYY || hh:mm a")} </div>
           <div>
-            <input
-              type="checkbox"
-              className="checkbox"
-              checked={completeStatus}
-            />
+            {completeLoader?
+              <CircularProgress />:
+              <input
+                type="checkbox"
+                className="checkbox"
+                checked={completeStatus}
+                onClick={toggleComplete}
+              />
+            }
           </div>
         </div>
         <div className={classes.descriptionTop}>
           <div className={classes.description}> {props.description} </div>
           <div className={classes.deleteButton}>
             <Button p={5}>
-              <DeleteIcon
-                fontSize={"large"}
-                color={"secondary"}
-                onClick={deleteTask}
-              />
+              {deleteLoader?
+                <CircularProgress />:
+                <DeleteIcon
+                  fontSize={"large"}
+                  color={"secondary"}
+                  onClick={deleteTask}
+                />
+              }
             </Button>
           </div>
         </div>
