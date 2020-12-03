@@ -1,0 +1,50 @@
+.blue{
+    color: lightblue;
+    padding:0px 10px;
+}
+.checkbox{
+    height:100%;
+    width:20px;
+}
+.fade{
+    opacity: 0.1;
+}
+
+.checked{
+    opacity:0.1
+}
+
+#abc:checked{
+    opacity:0.1;
+}
+
+.check{
+    opacity:0.4
+}
+
+.toolbar-left{
+    /* background-color: rgb(30,32,34,0.8); */
+    background-color:  #344955;
+     /* #408CAA ; */
+
+    /* color:lightgray; */
+    color:white;
+
+}
+
+.add-button{
+    position:fixed;
+    bottom:10px;
+    right:10px;
+    width:90px;
+    height:90px;
+}
+.delete-button{
+    height:30px;
+    width:70px;
+    border:none;
+    background-color: #e62d27;
+    box-shadow: 0px 0px 5px 1px darkgrey;
+    color:"white";
+    font-size: large;
+}
