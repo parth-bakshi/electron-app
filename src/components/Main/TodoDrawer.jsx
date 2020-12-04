@@ -176,10 +176,35 @@ function TodoDrawer(props) {
       });
   }, []);
 
-  const handleLogout = () => {
-    Cookies.remove("token");
-    Cookies.remove("is_login");
-    return (window.location.href = "/login");
+  const handleLogout = async () => {
+    setLoading(true);
+    await axios
+      .post("https://taskify-api.herokuapp.com/user/logout", {
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+          "content-type": "application/json",
+        },
+      })
+      .then((res) => {
+        if (res.status == 200) {
+          enqueueSnackbar("Logout Successfully", {
+            variant: "success",
+          });
+        }
+        // console.log(res);
+      })
+      .then(()=>{
+        Cookies.remove("token");
+        Cookies.remove("is_login");
+        window.location.href = "/login"
+      })
+      .catch((e) => {
+        enqueueSnackbar("Failed to Logout", {
+          variant: "error",
+        });
+      });
+    
+    setLoading(false);
   };
 
   const addTask = (task) => {
@@ -484,7 +509,7 @@ function TodoDrawer(props) {
             variant={"subtitle2"}
             style={{ margin: "1%", color: "#0a6fb6" }}
           >
-            Welcome to Todo App{" "}
+            {true?"Welcome to Todo App":"Loading..."}{" "}
           </Typography>
         </div>
       ) : (
