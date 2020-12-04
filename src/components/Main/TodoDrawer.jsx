@@ -108,7 +108,7 @@ function TodoDrawer(props) {
   const [userName, setUsername] = React.useState("");
   //above state will contain all data everytime
   const [loading, setLoading] = React.useState(true);
-  const [activeCategory, setActiveCategory] = React.useState("");
+  const [activeCategory, setActiveCategory] = React.useState("All Tasks");
 
   const [tasks, setTasks] = React.useState([]);
   //above state will be responsible which tasks to display
@@ -254,16 +254,20 @@ function TodoDrawer(props) {
   //   setShowAllTask(false);
   // };
   const handleTask = (e) => {
-    setActiveCategory("");
+    
     console.log(e.target.closest(".task-group").getAttribute("data-value"));
     let selectedElement = e.target
       .closest(".task-group")
       .getAttribute("data-value");
-
+    
     if (selectedElement === "complete") {
       selectedElement = true;
+      setActiveCategory("Completed Tasks");
     } else if (selectedElement === "incomplete") {
       selectedElement = false;
+      setActiveCategory("Incomplete Tasks");
+    }else if (selectedElement === "all") {
+      setActiveCategory("All Tasks");
     }
     let tempArray = [...allTasks];
     tempArray = tempArray.filter((task) => {
