@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { apiURLs } from "../../api_services/urls";
 import { useSnackbar } from 'notistack';
+import { CircularProgress } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -118,14 +119,16 @@ function Signup() {
           />
         </Grid>
         <Grid item xs={12} sm={12}>
-          <Button
+          {loader?
+            <CircularProgress />
+          :<Button
             variant="contained"
             color="primary"
             onClick={handleSubmit}
             fullWidth
           >
             Submit
-          </Button>
+          </Button>}
         </Grid>
         <Grid item xs={12} sm={12}>
           <Typography
