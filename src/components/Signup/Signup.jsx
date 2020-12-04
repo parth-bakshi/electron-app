@@ -33,6 +33,7 @@ function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loader,setLoader] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -50,6 +51,7 @@ function Signup() {
       if (!data.password) return enqueueSnackbar("Password is required", { variant: "warning" });
       if (data.password.length < 8) return enqueueSnackbar("Password should contain 8 characters", { variant: "warning" });
 
+      setLoader(true);
       const response = await axios.post(apiURLs.signup(), data);
       if (response.status === 201) {
         Cookies.set("token", response.data.token);
@@ -62,6 +64,7 @@ function Signup() {
       enqueueSnackbar("Server Error, Please try again", { variant: "error" });
       console.log(e);
     }
+    setLoader(false); 
   };
   return (
     <Fragment>
