@@ -108,6 +108,7 @@ function TodoDrawer(props) {
   const [userName, setUsername] = React.useState("");
   //above state will contain all data everytime
   const [loading, setLoading] = React.useState(true);
+  const [byebye, setByeBye] = React.useState(false);
   const [activeCategory, setActiveCategory] = React.useState("All Tasks");
 
   const [tasks, setTasks] = React.useState([]);
@@ -124,7 +125,7 @@ function TodoDrawer(props) {
     () => {
       allTasks.map((task) => {
         const taskDate = moment(task.date, "DD-MM-YYYY HH:mm");
-        console.log(taskDate.minute() - moment().minute() === 1);
+        // console.log(taskDate.minute() - moment().minute() === 1);
         if (
           taskDate.date() === moment().date() &&
           taskDate.month() === moment().month() &&
@@ -178,10 +179,11 @@ function TodoDrawer(props) {
 
   const handleLogout = async () => {
     setLoading(true);
+    setByeBye(true);
     await axios
-      .post("https://taskify-api.herokuapp.com/user/logout", {
+      .post("http://localhost:8000/user/logout", {} ,{
         headers: {
-          Authorization: `Bearer ${Cookies.get("token")}`,
+          "Authorization": `Bearer ${Cookies.get("token")}`,
           "content-type": "application/json",
         },
       })
@@ -191,12 +193,14 @@ function TodoDrawer(props) {
             variant: "success",
           });
         }
-        // console.log(res);
+        console.log(res);
       })
       .then(()=>{
         Cookies.remove("token");
         Cookies.remove("is_login");
-        window.location.href = "/login"
+        setTimeout(() => {
+          window.location.href = "/login"
+        }, 500);
       })
       .catch((e) => {
         enqueueSnackbar("Failed to Logout", {
@@ -205,6 +209,7 @@ function TodoDrawer(props) {
       });
     
     setLoading(false);
+    setByeBye(false);
   };
 
   const addTask = (task) => {
@@ -509,7 +514,7 @@ function TodoDrawer(props) {
             variant={"subtitle2"}
             style={{ margin: "1%", color: "#0a6fb6" }}
           >
-            {true?"Welcome to Todo App":"Loading..."}{" "}
+            {!byebye?"Welcome to Todo App":"Loading..."}{" "}
           </Typography>
         </div>
       ) : (
