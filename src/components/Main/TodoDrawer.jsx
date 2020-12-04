@@ -202,7 +202,7 @@ function TodoDrawer(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const handleSubmitCategory = (category) => {
+  const handleSubmitCategory = async (category) => {
     // setCategoryItem([...categoryItem,category])
     let tempArray = [...categories];
     tempArray.push(category);
@@ -211,7 +211,7 @@ function TodoDrawer(props) {
       category: category,
     });
     //to create a category
-    axios
+    await axios
       .post(apiURLs.createCategory(), params, {
         headers: {
           Authorization: `Bearer ${Cookies.get("token")}`,
