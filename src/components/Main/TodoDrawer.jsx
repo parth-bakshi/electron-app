@@ -181,7 +181,7 @@ function TodoDrawer(props) {
     setLoading(true);
     setByeBye(true);
     await axios
-      .post("http://localhost:8000/user/logout", {} ,{
+      .post("https://taskify-api.herokuapp.com/user/logout", {} ,{
         headers: {
           "Authorization": `Bearer ${Cookies.get("token")}`,
           "content-type": "application/json",
