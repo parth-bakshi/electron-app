@@ -9,6 +9,7 @@ import { Link, Redirect } from "react-router-dom";
 import { apiURLs } from "../../api_services/urls";
 import Cookies from "js-cookie";
 import { useSnackbar } from 'notistack';
+import { CircularProgress } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,6 +36,7 @@ function Login(props) {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loader, setLoader] = useState(false);
   const [state, setState] = React.useState({
     open: false,
     vertical: "top",
@@ -58,7 +60,8 @@ function Login(props) {
       if(!data.email.includes("@")) return enqueueSnackbar("Use valid email",{variant:"warning"});
       if(!data.password) return enqueueSnackbar("Password is required",{variant:"warning"});
       if(data.password.length< 8) return enqueueSnackbar("Password should contain 8 characters",{variant:"warning"});
-     
+
+      setLoader(true);
       console.log("data", data);
       const response = await axios.post(apiURLs.login(), data);
 
@@ -73,6 +76,7 @@ function Login(props) {
       enqueueSnackbar("Login Failed Wrong User Credentials",{variant:"error"});
       console.log(e);
     }
+    setLoader(false);
   };
   return (
     <Fragment>
@@ -113,14 +117,16 @@ function Login(props) {
           />
         </Grid>
         <Grid item xs={12} sm={12}>
-          <Button
+          {loader?
+            <CircularProgress />
+          :<Button
             variant="contained"
             color="primary"
             onClick={handleSubmit}
             fullWidth
           >
             Submit
-          </Button>
+          </Button>}
         </Grid>
         <Grid item xs={12} sm={12}>
           <Typography

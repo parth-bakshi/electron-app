@@ -15,6 +15,7 @@ import axios from "axios";
 import { apiURLs } from "../../api_services/urls";
 import Cookies from "js-cookie";
 import { useSnackbar } from "notistack";
+import { CircularProgress } from "@material-ui/core";
 
 export default function AddTodo({ open, onClose, addTask, categories }) {
   const [category, setCategory] = React.useState("category");
@@ -51,7 +52,8 @@ export default function AddTodo({ open, onClose, addTask, categories }) {
     setDescription(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    
     if (!todoItem)
       return enqueueSnackbar("Please Add Todo Item Name", { variant: "info" });
     if (!dateTime)
@@ -71,14 +73,14 @@ export default function AddTodo({ open, onClose, addTask, categories }) {
       date: dateTime,
       description: description,
     };
-
+    setLoader(true);
     setTodoForm({
       ...data,
     });
     const params = JSON.stringify({
       ...data,
     });
-    axios
+    await axios
       .post(apiURLs.createTask(), params, {
         headers: {
           Authorization: `Bearer ${Cookies.get("token")}`,
@@ -99,7 +101,9 @@ export default function AddTodo({ open, onClose, addTask, categories }) {
       });
 
     // console.log(data)
+    setLoader(false);
     onClose();
+    
   };
   return (
     <Fragment>
@@ -173,9 +177,11 @@ export default function AddTodo({ open, onClose, addTask, categories }) {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleSubmit} variant={"contained"} color="primary">
-            Add Todo
-          </Button>
+          {!loader?
+            <Button onClick={handleSubmit} variant={"contained"} color="primary">
+              Add Todo
+            </Button>:<CircularProgress />
+          }
         </DialogActions>
       </Dialog>
     </Fragment> 

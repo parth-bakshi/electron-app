@@ -172,7 +172,7 @@ export default function SimpleCard(props) {
           <div> {moment(props.date).format("MM-DD-YYYY || hh:mm a")} </div>
           <div>
             {completeLoader?
-              <CircularProgress />:
+              <CircularProgress color="secondary"/>:
               <input
                 type="checkbox"
                 className="checkbox"
@@ -187,7 +187,7 @@ export default function SimpleCard(props) {
           <div className={classes.deleteButton}>
             <Button p={5}>
               {deleteLoader?
-                <CircularProgress />:
+                <CircularProgress color="secondary"/>:
                 <DeleteIcon
                   fontSize={"large"}
                   color={"secondary"}
