@@ -22,7 +22,7 @@ export default function AddCategory({open,onClose,handleSubmitCategory}) {
   const handleSubmit = async () =>{
     if(category=="") return enqueueSnackbar("Please Add Category", {variant:"info"});
     setLoader(true);
-    await handleSubmitCategory(category);
+    await handleSubmitCategory(category); 
     setLoader(false);
     onClose();
  
