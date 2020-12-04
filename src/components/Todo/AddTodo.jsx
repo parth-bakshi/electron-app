@@ -21,7 +21,7 @@ export default function AddTodo({ open, onClose, addTask, categories }) {
   const [todoItem, setTodoItem] = React.useState("");
   const [dateTime, setDateTime] = React.useState(moment(Date()).format("YYYY-MM-DDTHH:mm"));
   const [description, setDescription] = React.useState("");
-  const [loader,setLoader] = useState(false);
+  const [loader,setLoader] = React.useState(false);
 
   const formData = {
     name: "",
